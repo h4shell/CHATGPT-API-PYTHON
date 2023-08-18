@@ -37,19 +37,22 @@ def main():
     data = request.json
     question = data.get("ask")
     conversation_id = data.get("conversation_id") or None
-    email = data.get("email")
-    password = data.get("password")
+    email = data.get("email") or None
+    password = data.get("password") or None
+    prompt = data.get("prompt") or ""
+    if prompt:
+        question = f'[istruzioni - {prompt}]\n{question}'
+
+    print(question)
 
     while email in queue:
         sleep(3)
     
     if email not in queue:
         queue.append(email)
-
-    
     
 
-    response_data = getAnswer(question, {"email": email, "password": password}, conversation_id)
+    response_data = getAnswer(question, {"email": email or userInfo["email"], "password": password or userInfo["password"]}, conversation_id)
     sleep(3)
 
     queue.remove(email)
