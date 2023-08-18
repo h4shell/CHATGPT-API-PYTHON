@@ -1,19 +1,19 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from revChatGPT.V1 import Chatbot
 
+userInfo = {
+    "email": "openai_email",  # your email openai
+    "password": "openai_password",  # your password openai
+}
 
-def chatAsk(question, token):
+
+def getAnswer(question, token):
     chatbot = Chatbot(config=token)
 
-    prev_text = ""
+    for data in chatbot.ask(question):
+        answer = data["message"]
 
-    for data in chatbot.ask(
-        question,
-    ):
-        message = data["message"][len(prev_text) :]
-        prev_text = data["message"]
-
-    return prev_text
+    return answer
 
 
 app = Flask(__name__)
@@ -21,16 +21,14 @@ app = Flask(__name__)
 
 @app.route("/")
 def main():
-    query_param = request.args.get("ask")
-    print(query_param)
-    chatGPT = chatAsk(
-        query_param,
-        {
-            "email": "< email >", # your email openai
-            "password": "< password >", #your password openai
-        },
+    question = request.args.get("ask")
+
+    answer = getAnswer(
+        question,
+        userInfo
     )
-    return {"status": True, "message": chatGPT}
+
+    return {"status": True, "answer": answer}
 
 
 if __name__ == "__main__":
