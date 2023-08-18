@@ -1,16 +1,17 @@
-from flask import Flask, request, Response
+from flask import Flask, request, Response, jsonify
 from revChatGPT.V1 import Chatbot
 from config import userInfo
 from flask_cors import CORS
+from time import sleep
 
 
-def getAnswer(question, token):
+def getAnswer(question, token, conversation_id = None):
     chatbot = Chatbot(config=token)
 
-    for data in chatbot.ask(question):
-        answer = data["message"]
+    for data in chatbot.ask(question, conversation_id):
+       data = data
 
-    return answer
+    return data
 
 
 def generate_answer_progressively(question, token):
@@ -29,16 +30,31 @@ app = Flask(__name__)
 CORS(app, origins="*")
 
 
-@app.route("/")
+queue = []
+
+@app.route("/", methods=["POST"])
 def main():
-    question = request.args.get("ask")
+    data = request.json
+    question = data.get("ask")
+    conversation_id = data.get("conversation_id") or None
+    email = data.get("email")
+    password = data.get("password")
 
-    answer = getAnswer(
-        question,
-        userInfo
-    )
+    while email in queue:
+        sleep(3)
+    
+    if email not in queue:
+        queue.append(email)
 
-    return {"status": True, "answer": answer}
+    
+    
+
+    response_data = getAnswer(question, {"email": email, "password": password}, conversation_id)
+    sleep(3)
+
+    queue.remove(email)
+
+    return jsonify({"status": True, "data": response_data})
 
 
 @app.route("/progressive")
