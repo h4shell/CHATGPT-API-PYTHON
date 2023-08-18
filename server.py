@@ -2,6 +2,7 @@ from flask import Flask, request
 from revChatGPT.V1 import Chatbot
 from config import userInfo
 
+
 def getAnswer(question, token):
     chatbot = Chatbot(config=token)
 
