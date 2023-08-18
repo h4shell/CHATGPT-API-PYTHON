@@ -54,7 +54,7 @@ def main():
     try:
         response_data = getAnswer(question, {"email": email or userInfo["email"], "password": password or userInfo["password"]}, conversation_id)
     except:
-        response_data = {"status": False, "answer": "Errore durante la comunicazione con il server, riprova più tardi"}
+        response_data = {"status": False, "answer": "error may conversation_id is not valid, check your params!!!"}
     sleep(3)
 
     queue.remove(email)
