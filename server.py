@@ -51,8 +51,10 @@ def main():
     if email not in queue:
         queue.append(email)
     
-
-    response_data = getAnswer(question, {"email": email or userInfo["email"], "password": password or userInfo["password"]}, conversation_id)
+    try:
+        response_data = getAnswer(question, {"email": email or userInfo["email"], "password": password or userInfo["password"]}, conversation_id)
+    except:
+        response_data = {"status": False, "answer": "Errore durante la comunicazione con il server, riprova più tardi"}
     sleep(3)
 
     queue.remove(email)
@@ -74,4 +76,4 @@ def progressive():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=16667)
