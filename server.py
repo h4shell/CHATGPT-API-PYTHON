@@ -1,11 +1,6 @@
 from flask import Flask, request
 from revChatGPT.V1 import Chatbot
-
-userInfo = {
-    "email": "openai_email",  # your email openai
-    "password": "openai_password",  # your password openai
-}
-
+from config import userInfo
 
 def getAnswer(question, token):
     chatbot = Chatbot(config=token)
