@@ -8,7 +8,7 @@ This repository contains a Flask-based server for interacting with the ChatGPT A
 
    ```
    git clone https://github.com/h4shell/CHATGPT-API-PYTHON.git
-   cd your-repo
+   cd CHATGPT-API-PYTHON
    ```
 
 2. Install the required packages listed in `requirements.txt` using pip:
