@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 from revChatGPT.V1 import Chatbot
 from config import userInfo
 
@@ -10,6 +10,17 @@ def getAnswer(question, token):
         answer = data["message"]
 
     return answer
+
+
+def generate_answer_progressively(question, token):
+    chatbot = Chatbot(config=token)
+    answer = ""
+    last_phrase = ""
+
+    for data in chatbot.ask(question):
+        answer = data["message"]
+        yield answer.replace(last_phrase, "")
+        last_phrase = answer
 
 
 app = Flask(__name__)
@@ -25,6 +36,19 @@ def main():
     )
 
     return {"status": True, "answer": answer}
+
+
+@app.route("/progressive")
+def progressive():
+    question = request.args.get("ask")
+
+    def generate():
+        yield '{"status": true, "answer": "'
+        for phrase in generate_answer_progressively(question, userInfo):
+            yield phrase
+        yield '"}'
+
+    return Response(generate(), mimetype='application/json')
 
 
 if __name__ == "__main__":
