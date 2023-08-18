@@ -1,6 +1,7 @@
 from flask import Flask, request, Response
 from revChatGPT.V1 import Chatbot
 from config import userInfo
+from flask_cors import CORS
 
 
 def getAnswer(question, token):
@@ -24,6 +25,8 @@ def generate_answer_progressively(question, token):
 
 
 app = Flask(__name__)
+
+CORS(app, origins="*")
 
 
 @app.route("/")
