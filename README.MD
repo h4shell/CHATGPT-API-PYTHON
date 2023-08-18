@@ -22,7 +22,8 @@ pip install -r requirements.txt
 # config.py
 
 userInfo = {
-    "token": "your_chatbot_token_here"
+    "email": "openai_email",  # your email openai
+    "password": "openai_password",  # your password openai
 }
 ```
 
@@ -33,7 +34,7 @@ Replace `"your_chatbot_token_here"` with your actual Chatbot API token.
 1. Start the Flask server:
 
 ```bash
-python app.py
+python server.py
 ```
 
 2. Access the API endpoints using a tool like `curl` or a web browser:
